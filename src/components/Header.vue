@@ -1,7 +1,7 @@
 <template>
    <div class="header">
         <h2>ADS</h2>
-        <button class="btn btn-light createAd" data-bs-toggle="modal" data-bs-target="#modal">Create Ad</button>
+        <button class="btn btn-light createAd" data-bs-toggle="modal" data-bs-target="#modal" :disabled="isDisabling">Create Ad</button>
         <div class="modal fade" tabindex="-1" id="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -39,6 +39,7 @@
 
 <script>
 export default {
+    name: 'HeaderComponent',
     props: {
         ads: Array
     },
@@ -49,24 +50,23 @@ export default {
                 price: '',
                 bids: '',
                 description: ''
-            }
+            },
+            isDisabling: this.$parent.$options.name !== 'Main'
         }
     },
     methods: {
-        sendAd() {
-            const data = {
-                title: this.newAd.title,
-                price: this.newAd.price,
-                bids: this.newAd.bids,
-                description: this.newAd.description
-            }
+         sendAd() {
+            const data = Object.assign({}, this.newAd);
+
             fetch('https://jurassic987.pythonanywhere.com/ads', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify(data)
-            }).then(() => {
+            }).then(async (res) => {
+                data.id = await res.json();
+             
                 this.$emit('adSended', data);
                 for (let key in this.newAd) {
                     this.newAd[key] = '';

@@ -3,7 +3,7 @@
     <Loader v-if="loading" />
     <div class="img-wrapper"></div>
     <div class="ad-wrapper">
-      <router-link to="/">return</router-link>
+      <router-link to="/Main">return</router-link>
       <h3 class="title">{{ this.ad.title }}</h3>
       <h3>Price: {{ this.ad.price }}</h3>
       <h3>Description:</h3>
@@ -103,7 +103,7 @@ export default {
           "Content-Type": "application/json;charset=utf-8",
         },
       }).then(()=> {
-        this.$router.push({path: '/'});
+        this.$router.push({path: '/Main'});
       });
     }
   },
