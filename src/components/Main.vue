@@ -24,11 +24,16 @@
       <Loader v-if="loading"/>
       <ul class="ads">
         <li v-for="(ad, index) in ads" :key="index" class="adItem">
-           <router-link class="toAd" :to="`/AdItem/${ad.id}`">{{ad.title}}</router-link>
-           <p>Price: {{ad.price}}</p>
-           <p>Bids: {{ad.bids}}</p>
-           <p>Image</p>
-        </li>     
+           <div class="image-container">
+                <img :src="`${ad.image_url}`" @click="goToAd(ad.id)" onerror="this.onerror=null;this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
+           </div>
+           <div class="ad-container">
+                <router-link class="toAd" :to="`/AdItem/${ad.id}`">{{ad.title}}</router-link>
+                <p class="price">{{ad.price}} UAH</p>
+                <p>Bids: {{ad.bids}}</p>
+                <p class="creationDate">Created at {{ad.create_date}}</p>
+           </div>
+        </li>
       </ul>
    </div>
 </template>
@@ -97,12 +102,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .hidden {
     display: none;
 }
 
+.wrapper {
+    width: 60%;
+    margin: 0 auto;
+}
 .searchWrap {
     display: flex;
     align-items: center;
@@ -139,9 +148,15 @@ export default {
 }
 
 .adItem {
+    display: flex;
     margin: 10px auto;
+    position: relative;
     background: #fff;
     border-radius: 5px;
+}
+
+.ad-container {
+    width: 60%;
 }
 
 .toAd {
@@ -155,6 +170,19 @@ export default {
 .toAd:hover {
     color: #fff;
     background-color: #002f34;
-} 
+}
+
+.price {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+}
+
+img {
+    width: 216px;
+    height: 152px;
+    cursor: pointer;
+}
 
 </style>

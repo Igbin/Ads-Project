@@ -4,15 +4,18 @@
     <div class="img-wrapper"></div>
     <div class="ad-wrapper">
       <router-link to="/Main">return</router-link>
+      <img :src="`${ad.image_url}`" onerror="this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
       <h3 class="title">{{ this.ad.title }}</h3>
-      <h3>Price: {{ this.ad.price }}</h3>
+      <h3>Price: {{ this.ad.price }} UAH</h3>
       <h3>Description:</h3>
       <p>{{ this.ad.description }}</p>
+      <p class="creationDate">Created at {{ad.create_date}}</p>
       <div class="buttons">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>
         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</button>
       </div>
     </div>
+
     <div class="modal fade" tabindex="-1" id="edit-modal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -22,20 +25,24 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Item title:</label>
-              <input type="text" class="form-control" placeholder="Item title" v-model="ad.title"/>
+              <label for="itemTitle" class="form-label">Item title:</label>
+              <input type="text" id="itemTitle" class="form-control" placeholder="Item title" v-model="ad.title"/>
             </div>
             <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Item price:</label>
-              <input type="number" class="form-control" placeholder="Item price" v-model="ad.price"/>
+              <label for="itemImage" class="form-label">Item image:</label>
+              <input type="text" id="itemImage" class="form-control" placeholder="Item image url" v-model="ad.image_url"/>
             </div>
             <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Item bids:</label>
-              <input type="number" class="form-control" placeholder="Item price" v-model="ad.bids"/>
+              <label for="itemPrice" class="form-label">Item price:</label>
+              <input type="number" id="itemPrice" class="form-control" placeholder="Item price" v-model="ad.price"/>
             </div>
             <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Item description:</label>
-              <textarea class="form-control" rows="3" v-model="ad.description"></textarea>
+              <label for="itemBids" class="form-label">Item bids:</label>
+              <input type="number" id="itemBids" class="form-control" placeholder="Item price" v-model="ad.bids"/>
+            </div>
+            <div class="mb-3">
+              <label for="itemDesc" class="form-label">Item description:</label>
+              <textarea class="form-control" id="itemDesc" rows="3" v-model="ad.description"></textarea>
             </div>
           </div>
           <div class="modal-footer">
@@ -45,6 +52,7 @@
         </div>
       </div>
     </div>
+
     <div class="modal fade" tabindex="-1" id="delete-modal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -87,6 +95,7 @@ export default {
         price: this.ad.price,
         bids: this.adbids,
         description: this.ad.description,
+        image_url: this.ad.image_url,
       };
       fetch(`https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`, {
         method: "PUT",
@@ -137,6 +146,12 @@ export default {
 
 .title {
   text-align: center;
+}
+
+img {
+  width: 500px;
+  display: block;
+  margin: 10px auto;
 }
 </style>
 

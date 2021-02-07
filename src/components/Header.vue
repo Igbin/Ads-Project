@@ -11,20 +11,24 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Item title:</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Item title" v-model="newAd.title">
+                            <label for="itemTitle" class="form-label">Item title:</label>
+                            <input type="text" class="form-control" id="itemTitle" placeholder="Item title" v-model="newAd.title">
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Item price:</label>
-                            <input type="number" class="form-control" id="exampleFormControlInput1" placeholder="Item price" v-model="newAd.price">
+                            <label for="itemImage" class="form-label">Item image url:</label>
+                            <input type="text" class="form-control" id="itemImage" placeholder="Item image url" v-model="newAd.image_url">
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Item bids:</label>
-                            <input type="number" class="form-control" id="exampleFormControlInput1" placeholder="Item price" v-model="newAd.bids">
+                            <label for="itemPrice" class="form-label">Item price:</label>
+                            <input type="number" class="form-control" id="itemPrice" placeholder="Item price" v-model="newAd.price">
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">Item description:</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="newAd.description"></textarea>
+                            <label for="itemBids" class="form-label">Item bids:</label>
+                            <input type="number" class="form-control" id="itemBids" placeholder="Item bids" v-model="newAd.bids">
+                        </div>
+                        <div class="mb-3">
+                            <label for="itemDescr" class="form-label">Item description:</label>
+                            <textarea class="form-control" id="itemDescr" rows="3" v-model="newAd.description"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -49,7 +53,8 @@ export default {
                 title: '',
                 price: '',
                 bids: '',
-                description: ''
+                description: '',
+                image_url: ''
             },
             isDisabling: this.$parent.$options.name !== 'Main'
         }
