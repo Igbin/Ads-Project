@@ -9,7 +9,7 @@
       <h3>Price: {{ this.ad.price }} UAH</h3>
       <h3>Description:</h3>
       <p>{{ this.ad.description }}</p>
-      <p class="creationDate">Created at {{ad.create_date}}</p>
+      <p class="creationDate">Created at {{moment(ad.create_date).format('MMMM Do YYYY, h:mm:ss a')}}</p>
       <div class="buttons">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>
         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</button>
@@ -72,6 +72,7 @@
 
 <script>
 import Loader from "@/components/loader";
+
 export default {
   components: { Loader },
   data() {

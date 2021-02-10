@@ -31,7 +31,7 @@
                 <router-link class="toAd" :to="`/AdItem/${ad.id}`">{{ad.title}}</router-link>
                 <p class="price">{{ad.price}} UAH</p>
                 <p>Bids: {{ad.bids}}</p>
-                <p class="creationDate">Created at {{ad.create_date}}</p>
+                <p class="creationDate">Created at {{moment(ad.create_date).format('MMMM Do YYYY')}}</p>
            </div>
         </li>
       </ul>
@@ -142,9 +142,10 @@ export default {
     background: #fff;
     position: absolute;
     top: 50px;
-    border: 1px solid blue;
+    padding-top: 10px;
+    border: 2px solid #86b7fe;
     border-radius: 5px;
-
+    z-index: 1;
 }
 
 .adItem {
@@ -153,6 +154,7 @@ export default {
     position: relative;
     background: #fff;
     border-radius: 5px;
+    z-index: 0;
 }
 
 .ad-container {
