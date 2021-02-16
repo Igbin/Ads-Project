@@ -59,29 +59,37 @@ export default {
         }
     },
     async mounted() {
-        const res = await fetch('https://jurassic987.pythonanywhere.com/ads');
-        const ads = await res.json();
-        this.ads = ads;
-        this.initAds = ads;
-        this.loading = false;
+        this.loadAds();
     },
     methods: {
-        addAd(data) {
-            this.ads.push(data);
+        async loadAds(){
+            const res = await fetch('https://jurassic987.pythonanywhere.com/ads');
+            const ads = await res.json();
+            this.ads = ads;
+            this.initAds = ads;
+            this.loading = false;
         },
+
+        addAd() {
+            this.loadAds;
+        },
+
         startSearch() {
             if (this.search.length >= 3) {
-                this.searchedAds = this.ads.filter((ad) => ad.title.startsWith(this.search));
+                this.searchedAds = this.ads.filter(ad => ad.title.toLowerCase().startsWith(this.search.toLowerCase()));
             } else {
                 this.searchedAds = [];
             }
         },
+
         toggleFocus(focusState) {
             this.searchFocused = focusState;
         },
+
         goToAd(id) {
             this.$router.push({path: `/AdItem/${ id }`});
         },
+
         filterAds() {
             this.filtersOn = !this.filtersOn;
             if (!this.filtersOn) {
@@ -155,6 +163,7 @@ export default {
     background: #fff;
     border-radius: 5px;
     z-index: 0;
+    min-width: 663px;
 }
 
 .ad-container {

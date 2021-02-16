@@ -106,6 +106,7 @@ export default {
         body: JSON.stringify(data)
       });
     },
+    
     deleteAd() {
       fetch(`https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`, {
         method: "DELETE",

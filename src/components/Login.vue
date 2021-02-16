@@ -4,7 +4,7 @@
     <form v-on:submit.prevent="onSubmit">
       <div class="form-group">
         <label for="login">Login:</label>
-        <input id="login" type="text" class="form-control" @input="validate" v-model="login" placeholder="min 5 symbols">
+        <input id="login" type="text" class="form-control" @input="validate" v-model="name" placeholder="min 5 symbols">
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
@@ -14,7 +14,6 @@
     </form>
   </div>
 </template>
-
 
 <script>
 import HeaderComponent from './Header.vue';
@@ -26,39 +25,35 @@ export default {
     },
     data() {
         return {
-            login: '',
+            name: '',
             password: '',
             isValidLength: false
         }
     },
     methods: {
         onSubmit() {
-           const data = {
-             login: this.login,
-             password: this.password
-           };
-           
-           let promise = new Promise((resolve) => {
-            setTimeout(() => {
-            resolve(data);
-            }, 1000);
-           });
+          const data = { name: this.name, password: this.password };
 
-           promise.then(result => {
-             alert("Fulfilled: " + result.login); 
-              this.$router.push({path: '/Main'});
-            },
-            error => {
-             alert("Rejected: " + error.login); 
-           });
-
-
+            fetch('https://jurassic987.pythonanywhere.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.ok ? res : Promise.reject(res))
+            .then(() => {
+                alert(`${this.name} succesfully logged in`);
+                this.$router.push({path: '/Main'});
+            })
+            .catch(res => res.json())
+            .catch(data => alert(data.message));
         },
+
         validate() {
-            return this.isValidLength = this.login.length >= 5 && this.password.length >= 8;
+            return this.isValidLength = this.name.length >= 5 && this.password.length >= 8;
         }
     }
-
 }
 </script>
 

@@ -1,8 +1,10 @@
 <template>
    <div class="header">
         <h2>ADS</h2>
-        <button class="btn btn-light createAd" data-bs-toggle="modal" data-bs-target="#modal" :disabled="isDisabling">Create Ad</button>
-        <div class="modal fade" tabindex="-1" id="modal">
+        <button class="btn btn-light createAd" data-bs-toggle="modal" data-bs-target="#modalAd" :disabled="isLoginPage">Create Ad</button>
+        <button class="btn btn-light registerBut" :disabled="!isLoginPage" data-bs-target="#modalRegistration" data-bs-toggle="modal">Register</button>
+
+        <div class="modal fade" tabindex="-1" id="modalAd">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -33,7 +35,40 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="sendAd" :disabled="!isValid">Add Ad</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="sendAd" :disabled="!isAdValid">Add Ad</button>
+                    </div>
+                </div>
+            </div>
+      </div>
+
+      <div class="modal fade" tabindex="-1" id="modalRegistration">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Registration</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newLogin" class="form-label">Login:</label>
+                            <input type="text" class="form-control" id="newLogin" placeholder="Enter login" v-model="newUser.name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newEmail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="newEmail" placeholder="Enter email" v-model="newUser.email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="Enter password" v-model="newUser.password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm password:</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password" v-model="newUser.verify_password">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="register" :disabled="!isUserValid">Register</button>
                     </div>
                 </div>
             </div>
@@ -49,14 +84,20 @@ export default {
     },
     data() {
         return {
-            newAd : {
+            newAd: {
                 title: '',
                 price: '',
                 bids: '',
                 description: '',
                 image_url: ''
             },
-            isDisabling: this.$parent.$options.name !== 'Main'
+            newUser: {
+                name: '',
+                password: '',
+                verify_password: '',
+                email: ''
+            },
+            isLoginPage: this.$parent.$options.name !== 'Main'
         }
     },
     methods: {
@@ -69,19 +110,39 @@ export default {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify(data)
-            }).then(async (res) => {
-                data.id = await res.json();
-             
-                this.$emit('adSended', data);
-                for (let key in this.newAd) {
-                    this.newAd[key] = '';
-                }
             })
+            .then(res => res.ok ? res : Promise.reject(res))
+            .then(() => this.$emit('adSended'))
+            .catch(res => res.json())
+            .catch(data => alert(data.message))
+        },
+
+        register() {
+            const data = Object.assign({}, this.newUser);
+
+            fetch('http://jurassic987.pythonanywhere.com/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.ok ? res : Promise.reject(res))
+            .then(() => {
+                alert(`${this.newUser.name} succesfully registered`);
+                this.$router.push({path: '/Main'});
+            })
+            .catch(res => res.json())
+            .then(data => alert(data.message))
         }
     },
     computed: {
-        isValid() {
+        isAdValid() {
             return this.newAd.title !== '' && this.newAd.price !== '' && this.newAd.bids !== '' && this.newAd.description !== '';
+        },
+        
+        isUserValid() {
+            return this.newUser.name !== '' && this.newUser.email !== '' && this.newUser.password !== '' && this.newUser.password === this.newUser.verify_password;
         }
     }
 
@@ -97,6 +158,7 @@ export default {
     height: 70px;
     background-color: #002f34;
     border-radius: 3px;
+    padding-left: 50px;
 }
 
 .header h2 {
@@ -112,6 +174,11 @@ export default {
     padding: 0;
     list-style-type: none;
 }
+
+.registerBut {
+    float: left;
+}
+
 
 .mb-3 {
     text-align: initial;
