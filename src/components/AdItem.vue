@@ -3,7 +3,7 @@
     <Loader v-if="loading" />
     <div class="img-wrapper"></div>
     <div class="ad-wrapper">
-      <router-link to="/Main">return</router-link>
+      <a class="btn btn-primary" @click="() => this.$router.go(-1)">return</a>
       <img :src="`${ad.image_url}`" onerror="this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
       <h3 class="title">{{ this.ad.title }}</h3>
       <h3>Price: {{ this.ad.price }} UAH</h3>
@@ -81,6 +81,9 @@ export default {
       loading: true,
     };
   },
+  beforeRouteEnter (to, from, next) {
+    if (from.fullPath === '/') alert('loggin at first') || next({path: '/'});
+  },
   async mounted() {
     const res = await fetch(
       `https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`
@@ -114,7 +117,7 @@ export default {
           "Content-Type": "application/json;charset=utf-8",
         },
       }).then(()=> {
-        this.$router.push({path: '/Main'});
+        this.$router.push({path: '/main'});
       });
     }
   },

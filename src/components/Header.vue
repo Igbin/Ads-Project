@@ -101,7 +101,7 @@ export default {
         }
     },
     methods: {
-         sendAd() {
+        sendAd() {
             const data = Object.assign({}, this.newAd);
 
             fetch('https://jurassic987.pythonanywhere.com/ads', {
@@ -130,10 +130,10 @@ export default {
             .then(res => res.ok ? res : Promise.reject(res))
             .then(() => {
                 alert(`${this.newUser.name} succesfully registered`);
-                this.$router.push({path: '/Main'});
+                this.$router.push({path: '/main'});
             })
             .catch(res => res.json())
-            .then(data => alert(data.message))
+            .then(data => alert(data.message));
         }
     },
     computed: {

@@ -8,7 +8,7 @@
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
-        <input id="password" type="password" class="form-control" @input="validate" v-model="password" placeholder="min 8 symbols">
+        <input id="password" type="password" class="form-control" @input="validate" v-model="password" placeholder="min 5 symbols">
       </div>
       <input type="submit" value="Enter" class="btn btn-primary" :disabled="!isValidLength">
     </form>
@@ -42,16 +42,19 @@ export default {
                 body: JSON.stringify(data)
             })
             .then(res => res.ok ? res : Promise.reject(res))
-            .then(() => {
-                alert(`${this.name} succesfully logged in`);
-                this.$router.push({path: '/Main'});
+            .then(async res => {
+                let data = await res.json();
+                alert(`${data.name} succesfully logged in`);
+                this.$router.push({ name: 'Main', params: {user: data} });
             })
-            .catch(res => res.json())
-            .catch(data => alert(data.message));
+            .catch(async res => {
+              let data = await res.json();
+              alert(data.message);
+            });
         },
 
         validate() {
-            return this.isValidLength = this.name.length >= 5 && this.password.length >= 8;
+            return this.isValidLength = this.name.length >= 5 && this.password.length >= 5;
         }
     }
 }

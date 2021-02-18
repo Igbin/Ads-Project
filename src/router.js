@@ -11,8 +11,10 @@ export default new Router({
             component: () => import('./components/Login.vue')
         },
         {
-            path: '/Main',
-            component: () => import('./components/Main.vue')
+            path: '/main',
+            name: 'Main',
+            component: () => import('./components/Main.vue'),
+            props: true 
         },
         {
             path: '/AdItem/:id',

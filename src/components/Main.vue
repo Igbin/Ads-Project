@@ -1,5 +1,6 @@
 <template>
    <div class="wrapper">
+      <h1>Hello {{user.name}}</h1>
       <HeaderComponent :ads='this.ads' @adSended='addAd' />
       <div class="searchWrap">
           <input type="text" 
@@ -9,7 +10,7 @@
             @focus="toggleFocus(true)"
             @blur="toggleFocus(false)" 
           > 
-          <button class="btn btn-primary btn-search"  @mousedown="filterAds()" :disabled="!searchedAds.length">
+          <button class="btn btn-primary btn-search" @mousedown="filterAds()" :disabled="!searchedAds.length">
               <span class="filterButtVal" v-if="filtersOn">Filter by title</span>
               <span class="filterButtVal resetFilters" v-else>Reset filter</span>
           </button>
@@ -42,11 +43,25 @@
 import HeaderComponent from './Header.vue';
 import Loader from '@/components/loader';
 
+let user = '';
+
 export default {
     name: 'Main',
+
     components: {
       HeaderComponent, Loader
     },
+
+    beforeRouteEnter (to, from, next) {
+        if (from.fullPath === '/') {
+            to.params.user ? next() : alert('loggin at first') || next({path: '/'});
+        } else {
+           next();
+        }
+    },
+
+    props: ['user'],
+
     data() {
         return {
             ads: [],
@@ -55,12 +70,16 @@ export default {
             search: '',
             loading: true,
             searchFocused: false,
-            filtersOn: true
+            filtersOn: true,
         }
     },
+
     async mounted() {
         this.loadAds();
+        this.$props && this.$props.user && (user = this.$props.user);
+        this.setUser()
     },
+
     methods: {
         async loadAds(){
             const res = await fetch('https://jurassic987.pythonanywhere.com/ads');
@@ -68,6 +87,10 @@ export default {
             this.ads = ads;
             this.initAds = ads;
             this.loading = false;
+        },
+
+        setUser() {
+            this.user = user
         },
 
         addAd() {
@@ -102,6 +125,7 @@ export default {
             
         }
     },
+
     computed: {
         searchEmpty() {
             return !this.searchedAds.length;
@@ -118,6 +142,7 @@ export default {
 
 .wrapper {
     width: 60%;
+    min-width: 663px;
     margin: 0 auto;
 }
 .searchWrap {
@@ -163,7 +188,6 @@ export default {
     background: #fff;
     border-radius: 5px;
     z-index: 0;
-    min-width: 663px;
 }
 
 .ad-container {
