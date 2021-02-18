@@ -82,7 +82,7 @@ export default {
     };
   },
   beforeRouteEnter (to, from, next) {
-    if (from.fullPath === '/') alert('loggin at first') || next({path: '/'});
+    from.fullPath !== '/' ? next() : alert('loggin at first') || next({path: '/'});
   },
   async mounted() {
     const res = await fetch(
@@ -139,6 +139,7 @@ export default {
   margin: 10% auto;
   padding: 50px;
   width: 70%;
+  min-width: 663px;
   background: #fff;
   border-radius: 5px;
   text-align: initial;

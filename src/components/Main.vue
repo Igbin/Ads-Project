@@ -141,7 +141,7 @@ export default {
 }
 
 .wrapper {
-    width: 60%;
+    width: 70%;
     min-width: 663px;
     margin: 0 auto;
 }

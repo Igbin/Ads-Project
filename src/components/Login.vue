@@ -62,7 +62,7 @@ export default {
 
 <style>
 .wrapper {
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
 }
 
