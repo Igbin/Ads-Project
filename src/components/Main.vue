@@ -1,7 +1,6 @@
 <template>
    <div class="wrapper">
-      <h1>Hello {{user.name}}</h1>
-      <HeaderComponent :ads='this.ads' @adSended='addAd' />
+      <HeaderComponent :ads='this.ads' @adSended='addAd' :user='user.name' />
       <div class="searchWrap">
           <input type="text" 
             class="form-control search" placeholder="type title here" 
@@ -22,14 +21,16 @@
               </ul>
           </div>
       </div>
+
       <Loader v-if="loading"/>
+
       <ul class="ads">
         <li v-for="(ad, index) in ads" :key="index" class="adItem">
            <div class="image-container">
                 <img :src="`${ad.image_url}`" @click="goToAd(ad.id)" onerror="this.onerror=null;this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
            </div>
            <div class="ad-container">
-                <router-link class="toAd" :to="`/AdItem/${ad.id}`">{{ad.title}}</router-link>
+                <router-link class="toAd" :to="{name: 'AdItem', params: { id: ad.id, user: user.name }}">{{ad.title}}</router-link>
                 <p class="price">{{ad.price}} UAH</p>
                 <p>Bids: {{ad.bids}}</p>
                 <p class="creationDate">Created at {{moment(ad.create_date).format('MMMM Do YYYY')}}</p>
@@ -110,7 +111,8 @@ export default {
         },
 
         goToAd(id) {
-            this.$router.push({path: `/AdItem/${ id }`});
+            // this.$router.push({path: `/AdItem/${ id }`});
+            this.$router.push({name: `AdItem`, params: { id, user: this.user.name }});
         },
 
         filterAds() {

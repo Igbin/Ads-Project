@@ -1,18 +1,23 @@
 <template>
   <div class="item-wrapper">
+    <HeaderComponent :user='this.user' />
+
     <Loader v-if="loading" />
-    <div class="img-wrapper"></div>
-    <div class="ad-wrapper">
-      <a class="btn btn-primary" @click="() => this.$router.go(-1)">return</a>
-      <img :src="`${ad.image_url}`" onerror="this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
-      <h3 class="title">{{ this.ad.title }}</h3>
-      <h3>Price: {{ this.ad.price }} UAH</h3>
-      <h3>Description:</h3>
-      <p>{{ this.ad.description }}</p>
-      <p class="creationDate">Created at {{moment(ad.create_date).format('MMMM Do YYYY, h:mm:ss a')}}</p>
-      <div class="buttons">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</button>
+
+    <div class="item">
+      <div class="img-wrapper"></div>
+      <div class="ad-wrapper">
+        <a class="btn btn-primary" @click="() => this.$router.go(-1)">return</a>
+        <img :src="`${ad.image_url}`" onerror="this.src='https://piotrkowalski.pw/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';">
+        <h3 class="title">{{ this.ad.title }}</h3>
+        <h3>Price: {{ this.ad.price }} UAH</h3>
+        <h3>Description:</h3>
+        <p>{{ this.ad.description }}</p>
+        <p class="creationDate">Created at {{moment(ad.create_date).format('MMMM Do YYYY, h:mm:ss a')}}</p>
+        <div class="buttons">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>
+          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">Delete</button>
+        </div>
       </div>
     </div>
 
@@ -72,26 +77,35 @@
 
 <script>
 import Loader from "@/components/loader";
+import HeaderComponent from './Header.vue';
 
 export default {
-  components: { Loader },
+  components: { Loader, HeaderComponent },
+  props: ['user', 'id'],
+
   data() {
     return {
       ad: {},
       loading: true,
     };
   },
+
   beforeRouteEnter (to, from, next) {
     from.fullPath !== '/' ? next() : alert('loggin at first') || next({path: '/'});
   },
+
   async mounted() {
     const res = await fetch(
-      `https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`
+      // `https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`
+      `https://jurassic987.pythonanywhere.com/ads/${this.id}`
     );
     const ad = await res.json();
     this.ad = ad;
     this.loading = false;
+
+    console.log(this.id, this.user)
   },
+
   methods: {
     editAd() {
       const data = {
@@ -101,7 +115,8 @@ export default {
         description: this.ad.description,
         image_url: this.ad.image_url,
       };
-      fetch(`https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`, {
+
+      fetch(`https://jurassic987.pythonanywhere.com/ads/${this.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -111,7 +126,7 @@ export default {
     },
     
     deleteAd() {
-      fetch(`https://jurassic987.pythonanywhere.com/ads/${this.$route.params.id}`, {
+      fetch(`https://jurassic987.pythonanywhere.com/ads/${this.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -136,13 +151,16 @@ export default {
 
 <style scoped>
 .item-wrapper {
-  margin: 10% auto;
-  padding: 50px;
+  margin: 0 auto;
   width: 70%;
   min-width: 663px;
   background: #fff;
   border-radius: 5px;
   text-align: initial;
+}
+
+.item {
+  padding: 20px;
 }
 
 .buttons {

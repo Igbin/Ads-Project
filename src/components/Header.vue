@@ -2,7 +2,10 @@
    <div class="header">
         <h2>ADS</h2>
         <button class="btn btn-light createAd" data-bs-toggle="modal" data-bs-target="#modalAd" :disabled="isLoginPage">Create Ad</button>
-        <button class="btn btn-light registerBut" :disabled="!isLoginPage" data-bs-target="#modalRegistration" data-bs-toggle="modal">Register</button>
+        <button class="btn registerBut" :class="isLoginPage && 'btn-light' || 'btn-danger'" data-bs-target="#modalRegistration" @click="toggleUser()">
+            <span class="registerButtVal" v-if="isLoginPage">Register</span>
+            <span class="registerButtVal exitUser" v-else>Exit {{user}}</span>
+        </button>
 
         <div class="modal fade" tabindex="-1" id="modalAd">
             <div class="modal-dialog">
@@ -41,7 +44,7 @@
             </div>
       </div>
 
-      <div class="modal fade" tabindex="-1" id="modalRegistration">
+      <div class="modal fade" tabindex="-1" id="modalRegistration" ref="modalRegistration">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -76,12 +79,24 @@
     </div>
 </template>
 
+
+
 <script>
+
+import { Modal } from 'bootstrap'
+
 export default {
     name: 'HeaderComponent',
+
     props: {
-        ads: Array
+        ads: Array,
+        user: String
     },
+
+    mounted() {
+        console.log(this.user)
+    },
+
     data() {
         return {
             newAd: {
@@ -97,7 +112,7 @@ export default {
                 verify_password: '',
                 email: ''
             },
-            isLoginPage: this.$parent.$options.name !== 'Main'
+            isLoginPage: this.$parent.$options.name === 'Login'
         }
     },
     methods: {
@@ -115,6 +130,15 @@ export default {
             .then(() => this.$emit('adSended'))
             .catch(res => res.json())
             .catch(data => alert(data.message))
+        },
+
+        toggleUser() {
+            if (this.isLoginPage) {
+                const myModal = new Modal(this.$refs.modalRegistration)
+                myModal.toggle();
+            } else {
+                this.$router.push({path: `/`});
+            }
         },
 
         register() {
